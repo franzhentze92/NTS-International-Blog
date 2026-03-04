@@ -155,10 +155,22 @@ export const BLOG_UI: Record<Locale, BlogUIStrings> = {
     watchOnYouTube: "Auf YouTube ansehen",
     watchOnVimeo: "Auf Vimeo ansehen",
   },
-  ar: BLOG_UI_EN,
-  hi: BLOG_UI_EN,
-  vi: BLOG_UI_EN,
-  zh: BLOG_UI_EN,
+  ar: {
+    ...BLOG_UI_EN,
+    siteDescription: "مقالات وأفكار من رواد Nutrition Farming®",
+  },
+  hi: {
+    ...BLOG_UI_EN,
+    siteDescription: "Nutrition Farming® के अग्रणियों के लेख और विचार",
+  },
+  vi: {
+    ...BLOG_UI_EN,
+    siteDescription: "Bài viết và ý tưởng từ những người tiên phong của Nutrition Farming®",
+  },
+  zh: {
+    ...BLOG_UI_EN,
+    siteDescription: "来自营养农业®先驱的文章与见解",
+  },
 };
 
 export function getBlogUI(locale: Locale): BlogUIStrings {
