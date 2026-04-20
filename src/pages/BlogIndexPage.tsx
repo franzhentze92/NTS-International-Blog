@@ -6,6 +6,7 @@ import { BlogLayout } from "@/components/blog/BlogLayout";
 import { useBlog } from "@/contexts/BlogContext";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { getBlogUI } from "@/lib/blog-i18n";
+import { blogImagePresets, supabaseRenderImageUrl } from "@/lib/supabase";
 
 function PostCard({
   post,
@@ -22,6 +23,10 @@ function PostCard({
   displayDate: string;
   displayImage?: string;
 }) {
+  const cardImageSrc = displayImage
+    ? supabaseRenderImageUrl(displayImage, blogImagePresets.card)
+    : undefined;
+
   return (
     <article
       className={`post-card flex flex-col bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${
@@ -39,12 +44,14 @@ function PostCard({
             <h2 className="post-card-title font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-snug px-6 pt-6 pb-2 text-black uppercase tracking-wide">
               {displayTitle}
             </h2>
-            {displayImage && (
+            {cardImageSrc && (
               <div className="post-card-image-link block px-6 overflow-hidden flex-shrink-0">
                 <div className="rounded-lg overflow-hidden aspect-[21/9] bg-[#f1f1f1]">
                   <img
-                    src={displayImage}
+                    src={cardImageSrc}
                     alt=""
+                    fetchPriority="high"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -64,12 +71,14 @@ function PostCard({
             <h2 className="post-card-title font-sans text-lg md:text-xl font-bold leading-snug m-0 text-black group-hover:text-[#0d0e0f] line-clamp-4 min-h-[6.5rem]">
               {displayTitle}
             </h2>
-            {displayImage && (
+            {cardImageSrc && (
               <div className="post-card-image-link block mt-4 w-full overflow-hidden rounded-lg bg-[#f1f1f1] flex-shrink-0">
                 <div className="w-full aspect-[4/3] relative overflow-hidden rounded-lg">
                   <img
-                    src={displayImage}
+                    src={cardImageSrc}
                     alt=""
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                 </div>

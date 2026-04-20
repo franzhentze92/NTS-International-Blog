@@ -26,12 +26,15 @@ export const BlogTopBar: React.FC = () => {
           >
             {t.siteTitle}
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-white/90 text-xs sm:text-sm hidden sm:inline" aria-hidden>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-white/90 text-xs sm:text-sm shrink-0" id="blog-topbar-language-label">
               {t.languageLabel}
             </span>
             <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
-              <SelectTrigger className="w-[140px] sm:w-[160px] border-white/30 bg-white/15 text-white hover:bg-white/25 focus:ring-[#6b8f1f] focus:ring-2 focus:border-white/40 [&>span]:text-white placeholder:text-white/80">
+              <SelectTrigger
+                aria-labelledby="blog-topbar-language-label"
+                className="w-[min(42vw,140px)] sm:w-[160px] border-white/30 bg-white/15 text-white hover:bg-white/25 focus:ring-[#6b8f1f] focus:ring-2 focus:border-white/40 [&>span]:text-white placeholder:text-white/80"
+              >
                 <SelectValue placeholder={t.languageLabel} />
               </SelectTrigger>
               <SelectContent className="border-[#a4d037]/30 bg-white focus:ring-[#a4d037]/30">

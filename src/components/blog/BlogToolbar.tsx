@@ -26,7 +26,10 @@ export const BlogToolbar: React.FC = () => {
   };
 
   return (
-    <div className="blog-toolbar bg-white border-b border-[#e1e1e1] sticky top-0 z-30 shadow-sm">
+    <div
+      id="blog-main-toolbar"
+      className="blog-toolbar bg-white border-b border-[#e1e1e1] sticky top-0 z-30 shadow-sm scroll-mt-0"
+    >
       <div className="outer">
         <div className="inner">
           <div className="flex flex-row items-center gap-2 sm:gap-4 py-2 sm:py-4">
@@ -55,12 +58,15 @@ export const BlogToolbar: React.FC = () => {
                 aria-label={t.searchLabel}
               />
             </form>
-            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-              <span className="text-[#738a94] text-xs sm:text-sm hidden sm:inline" aria-hidden>
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0 min-w-0">
+              <span className="text-[#738a94] text-xs sm:text-sm shrink-0" id="blog-toolbar-language-label">
                 {t.languageLabel}
               </span>
               <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
-                <SelectTrigger className="h-8 sm:h-9 w-[90px] sm:w-[150px] border border-[#e1e1e1] bg-[#f8f9fa] text-[#15171A] text-sm hover:bg-[#eef0f2] focus:ring-[#a4d037]/30 focus:ring-2 focus:border-[#a4d037] px-2 sm:px-3">
+                <SelectTrigger
+                  aria-labelledby="blog-toolbar-language-label"
+                  className="h-8 sm:h-9 w-[min(38vw,90px)] sm:w-[150px] border border-[#e1e1e1] bg-[#f8f9fa] text-[#15171A] text-sm hover:bg-[#eef0f2] focus:ring-[#a4d037]/30 focus:ring-2 focus:border-[#a4d037] px-2 sm:px-3"
+                >
                   <SelectValue placeholder={t.languageLabel} />
                 </SelectTrigger>
                 <SelectContent className="border-[#e1e1e1] bg-white focus:ring-[#a4d037]/30">

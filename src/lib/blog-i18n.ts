@@ -158,18 +158,22 @@ export const BLOG_UI: Record<Locale, BlogUIStrings> = {
   ar: {
     ...BLOG_UI_EN,
     siteDescription: "مقالات وأفكار من رواد Nutrition Farming®",
+    languageLabel: "اللغة",
   },
   hi: {
     ...BLOG_UI_EN,
     siteDescription: "Nutrition Farming® के अग्रणियों के लेख और विचार",
+    languageLabel: "भाषा",
   },
   vi: {
     ...BLOG_UI_EN,
     siteDescription: "Bài viết và ý tưởng từ những người tiên phong của Nutrition Farming®",
+    languageLabel: "Ngôn ngữ",
   },
   zh: {
     ...BLOG_UI_EN,
     siteDescription: "来自营养农业®先驱的文章与见解",
+    languageLabel: "语言",
   },
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getPostForLocale, formatArticleDate, ensureContentHtml, formatReadTimeDisplay } from "@/data/blog";
 import { BlogLayout } from "@/components/blog/BlogLayout";
@@ -8,6 +8,7 @@ import { getVideoWatchUrl } from "@/lib/video";
 import { ArrowLeft, User, Calendar, Clock, ExternalLink } from "lucide-react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { getBlogUI } from "@/lib/blog-i18n";
+import { blogImagePresets, supabaseRenderImageUrl } from "@/lib/supabase";
 
 const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -15,6 +16,33 @@ const BlogPostPage: React.FC = () => {
   const { posts } = useBlogPosts();
   const post = slug ? posts.find((p) => p.slug === slug) : undefined;
   const t = getBlogUI(locale);
+
+  const heroImageRaw =
+    post != null
+      ? (getPostForLocale(post, locale).image ?? post.image) || undefined
+      : undefined;
+  const heroImageForPreload = heroImageRaw
+    ? supabaseRenderImageUrl(heroImageRaw, blogImagePresets.hero)
+    : undefined;
+
+  // Preload hero image so it starts loading immediately with high priority
+  useEffect(() => {
+    if (!heroImageForPreload) return;
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = heroImageForPreload;
+    document.head.appendChild(link);
+    return () => {
+      link.remove();
+    };
+  }, [heroImageForPreload]);
+
+  // Land at the article title (below sticky toolbar), not mid-body — before paint to avoid flash
+  useLayoutEffect(() => {
+    if (!post) return;
+    document.getElementById("article-page-title")?.scrollIntoView({ behavior: "instant", block: "start" });
+  }, [post?.id]);
 
   if (!post) {
     return (
@@ -37,6 +65,9 @@ const BlogPostPage: React.FC = () => {
 
   const { title, content, image: localeImage, video: localeVideo } = getPostForLocale(post, locale);
   const heroImage = localeImage ?? post.image;
+  const heroImageSrc = heroImage
+    ? supabaseRenderImageUrl(heroImage, blogImagePresets.hero)
+    : undefined;
   const videoUrl = localeVideo ?? post.video;
   const relatedPosts = posts.filter((p) => p.id !== post.id).slice(0, 3);
 
@@ -55,7 +86,10 @@ const BlogPostPage: React.FC = () => {
             </Link>
           </div>
 
-          <header className="article-header pb-6">
+          <header
+            id="article-page-title"
+            className="article-header pb-6 scroll-mt-[4.75rem] sm:scroll-mt-[5.25rem]"
+          >
             <h1 className="article-title font-serif text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-[#15171A] m-0">
               {title}
             </h1>
@@ -76,11 +110,13 @@ const BlogPostPage: React.FC = () => {
           </header>
 
           {/* Hero image */}
-          {heroImage && (
+          {heroImageSrc && (
             <div className="article-hero mb-8 overflow-hidden rounded-xl shadow-lg bg-[#f1f1f1] relative min-h-[200px] aspect-[21/9] md:aspect-[2/1]">
               <img
-                src={heroImage}
+                src={heroImageSrc}
                 alt=""
+                fetchPriority="high"
+                decoding="async"
                 className="w-full h-auto object-cover aspect-[21/9] md:aspect-[2/1] min-h-[200px]"
                 onError={(e) => {
                   const el = e.target as HTMLImageElement;
@@ -171,17 +207,20 @@ const BlogPostPage: React.FC = () => {
                 {relatedPosts.map((p) => {
                   const { titleDisplay, image: relatedImage } = getPostForLocale(p, locale);
                   const img = relatedImage ?? p.image;
+                  const imgSrc = img ? supabaseRenderImageUrl(img, blogImagePresets.card) : undefined;
                   return (
                     <Link
                       key={String(p.id)}
                       to={`/post/${p.slug}`}
                       className="block p-4 rounded-xl bg-white border border-[#e1e1e1] shadow-sm hover:shadow-md hover:border-[#a4d037]/30 transition-all no-underline text-[#15171A] group"
                     >
-                      {img && (
+                      {imgSrc && (
                         <div className="aspect-video rounded-lg overflow-hidden mb-3 bg-[#f1f1f1]">
                           <img
-                            src={img}
+                            src={imgSrc}
                             alt=""
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                           />
                         </div>

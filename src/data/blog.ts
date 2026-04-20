@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/locales";
+import { transformSupabaseImgSrcInHtml } from "@/lib/supabase";
 
 export interface PostTranslation {
   title: string;
@@ -319,5 +320,6 @@ export function ensureContentHtml(content: string): string {
   // Final pass: remove stray <p>figure</p> and <p>class="article-inline-image"</p> (or single quotes) even if not adjacent
   html = html.replace(/<p>\s*figure\s*<\/p>/gi, "");
   html = html.replace(/<p>\s*class\s*=\s*["']article-inline-image["']\s*<\/p>/gi, "");
+  html = transformSupabaseImgSrcInHtml(html);
   return html;
 }

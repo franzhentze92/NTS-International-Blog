@@ -17,9 +17,14 @@ import AdminArticleFormPage from "./pages/admin/AdminArticleFormPage";
 
 const queryClient = new QueryClient();
 
+const DOCUMENT_TITLE = "Nutrition Matters Translated";
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
+    document.title = DOCUMENT_TITLE;
+    // Article pages scroll to the article title in BlogPostPage — don't reset to top
+    if (pathname.startsWith("/post/")) return;
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
@@ -31,7 +36,12 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
           <BlogProvider>
             <ScrollToTop />
             <Routes>
